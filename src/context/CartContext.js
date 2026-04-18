@@ -14,9 +14,9 @@ export function CartProvider({ children }) {
     } catch {}
   }, []);
 
-  const addToCart = async (productId, quantity = 1) => {
+  const addToCart = async (productId, quantity = 1, selectedImage = null) => {
     try {
-      await api.post('/cart/add', { productId, quantity });
+      await api.post('/cart/add', { productId, quantity, selectedImage });
       toast.success('Added to cart!');
       fetchCart();
     } catch (err) {

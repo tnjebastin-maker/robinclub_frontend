@@ -16,7 +16,7 @@ export default function ProductCard({ product }) {
 
   const handleAdd = () => {
     if (!user) { navigate('/login'); return; }
-    addToCart(product.id);
+    addToCart(product.id, 1, allImages[imgIndex]);
   };
 
   return (

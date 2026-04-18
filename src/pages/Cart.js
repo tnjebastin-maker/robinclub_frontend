@@ -107,9 +107,9 @@ export default function Cart() {
             {items.map(item => (
               <div key={item.id} className="flex items-center gap-4 bg-white border border-gray-200 p-4 rounded-xl shadow-sm">
                 <img
-                  src={item.product.imageUrl || `https://picsum.photos/seed/${item.product.id}/80/80`}
+                  src={item.selectedImage || item.product.imageUrl || `https://picsum.photos/seed/${item.product.id}/80/80`}
                   alt={item.product.name}
-                  onClick={() => setZoomImg(item.product.imageUrl || `https://picsum.photos/seed/${item.product.id}/600/600`)}
+                  onClick={() => setZoomImg(item.selectedImage || item.product.imageUrl || `https://picsum.photos/seed/${item.product.id}/600/600`)}
                   className="w-20 h-20 object-cover rounded-lg border border-gray-100 cursor-zoom-in hover:scale-105 transition duration-200"
                 />
                 <div className="flex-1 min-w-0">
