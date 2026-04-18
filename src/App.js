@@ -13,7 +13,7 @@ import Orders from './pages/Orders';
 import Admin from './pages/Admin';
 import Profile from './pages/Profile';
 
-const GOOGLE_CLIENT_ID = '709536898593-kemtva4r73j7dtj3jh5acuuac5a2gc2j.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
