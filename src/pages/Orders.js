@@ -12,15 +12,18 @@ const STATUS_STYLES = {
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     api.get('/orders')
       .then(({ data }) => setOrders(data))
-      .catch(() => {})
+      .catch(err => setError(err.response?.data?.message || 'Failed to load orders'))
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="text-center py-20 text-gray-400">Loading orders...</div>;
+
+  if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
 
   if (orders.length === 0) {
     return (
@@ -52,7 +55,7 @@ export default function Orders() {
             <div className="space-y-1 mb-4">
               {order.items.map(item => (
                 <div key={item.id} className="flex justify-between text-sm text-gray-500">
-                  <span>{item.product.name} × {item.quantity}</span>
+                  <span>{item.product?.name ?? 'Product unavailable'} × {item.quantity}</span>
                   <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
