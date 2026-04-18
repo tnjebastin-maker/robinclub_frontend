@@ -33,10 +33,19 @@ export function CartProvider({ children }) {
     }
   };
 
+  const updateQuantity = async (itemId, quantity) => {
+    try {
+      await api.put(`/cart/update/${itemId}`, { quantity });
+      fetchCart();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update quantity');
+    }
+  };
+
   const cartCount = cart?.items?.reduce((sum, i) => sum + i.quantity, 0) || 0;
 
   return (
-    <CartContext.Provider value={{ cart, fetchCart, addToCart, removeFromCart, cartCount }}>
+    <CartContext.Provider value={{ cart, fetchCart, addToCart, removeFromCart, updateQuantity, cartCount }}>
       {children}
     </CartContext.Provider>
   );

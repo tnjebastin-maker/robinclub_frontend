@@ -12,7 +12,7 @@ const STATUS_STYLES = {
 export default function Admin() {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState(emptyForm);
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [editId, setEditId] = useState(null);
   const [orders, setOrders] = useState([]);
   const [tab, setTab] = useState('products');
@@ -27,11 +27,11 @@ export default function Admin() {
     e.preventDefault();
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => fd.append(k, v));
-    if (image) fd.append('image', image);
+    images.forEach(img => fd.append('images', img));
     try {
       if (editId) { await api.put(`/admin/products/${editId}`, fd); toast.success('Product updated'); }
       else { await api.post('/admin/products', fd); toast.success('Product added'); }
-      setForm(emptyForm); setImage(null); setEditId(null); setShowForm(false);
+      setForm(emptyForm); setImages([]); setEditId(null); setShowForm(false);
       fetchProducts();
     } catch { toast.error('Failed to save product'); }
   };
@@ -39,6 +39,7 @@ export default function Admin() {
   const handleEdit = (p) => {
     setEditId(p.id);
     setForm({ name: p.name, description: p.description || '', price: p.price, stock: p.stock, category: p.category });
+    setImages([]);
     setShowForm(true); setTab('products');
   };
 
@@ -103,7 +104,18 @@ export default function Admin() {
               <input type="number" placeholder="Price (₹)" required className={inputCls} value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} />
               <input type="number" placeholder="Stock" required className={inputCls} value={form.stock} onChange={e => setForm({ ...form, stock: e.target.value })} />
               <input placeholder="Category" required className={inputCls} value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} />
-              <input type="file" accept="image/*" className={inputCls} onChange={e => setImage(e.target.files[0])} />
+              <div className="col-span-2">
+                <label className="text-gray-600 text-xs font-medium mb-1 block">Images (select multiple)</label>
+                <input type="file" accept="image/*" multiple className={inputCls}
+                  onChange={e => setImages(Array.from(e.target.files))} />
+                {images.length > 0 && (
+                  <div className="flex gap-2 mt-2 flex-wrap">
+                    {images.map((img, i) => (
+                      <img key={i} src={URL.createObjectURL(img)} alt="" className="w-14 h-14 object-cover rounded-lg border border-gray-200" />
+                    ))}
+                  </div>
+                )}
+              </div>
               <button type="submit" className="col-span-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition">
                 {editId ? 'Update Product' : 'Add Product'}
               </button>
